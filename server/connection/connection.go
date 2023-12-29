@@ -4,20 +4,32 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"sync"
 
 	_ "github.com/lib/pq"
 )
 
 // connection parameters for postgres
-const (
+/*const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
 	password = "Saranya@426"
 	dbname   = "postgres"
-)
+)*/
 
-var db *sql.DB
+type DBConfig struct {
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	Dbname   string `json:"dbname"`
+}
+
+var (
+	db   *sql.DB
+	once sync.Once
+)
 
 // defining table Booking as a structure
 type Booking struct {
@@ -31,34 +43,26 @@ type Booking struct {
 }
 
 // Function to connect to the database
-func connection() (*sql.DB, error) {
+func Connection(config DBConfig) {
 	//converting the connections parameters to string and saving the values
 	//using sprinf
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-
-	//to connect to database using sql.open
 	var err error
-	db, err = sql.Open("postgres", psqlInfo)
-	if err != nil {
-		log.Println("Error in db", err)
-		return nil, err
-	}
-	//defer db.Close()
-
-	//checking the connection using ping command
-	err = db.Ping()
-	if err != nil {
-		log.Println("Error in ping", err)
-		return nil, err
-	}
-	fmt.Println("Sucessfully connected")
-	return db, err
+	once.Do(func() {
+		psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.Host, config.Port, config.User, config.Password, config.Dbname)
+		db, err = sql.Open("postgres", psqlInfo)
+		if err != nil {
+			log.Fatal("Error opening database connection:", err)
+		}
+		err = db.Ping()
+		if err != nil {
+			log.Fatal("Error pinging database:", err)
+		}
+	})
 
 }
 
 // Query function : wil return output in the form of booking structure
-func Query(Querytype int) ([]Booking, error) {
-	connection()
+func Query(host, user, password, dbname string, port int, Querytype int) ([]Booking, error) {
 	var query string
 	switch Querytype {
 	case 1:
