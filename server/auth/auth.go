@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"auth/server/connection"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,5 +29,14 @@ func AuthMiddleware() gin.HandlerFunc {
 func GET_DB(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "Access Granted!"})
 	//c.JSON(200, gin.H{"message": connection.Query(1)})
+}
+
+func GET_Connection(c *gin.Context) {
+	input, err := connection.Query(1)
+	if err != nil {
+		log.Println("Error in input", err)
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Internal server error"})
+	}
+	c.IndentedJSON(http.StatusOK, input)
 
 }
