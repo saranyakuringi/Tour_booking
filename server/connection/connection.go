@@ -58,7 +58,6 @@ func Connection(config DBConfig) {
 			log.Fatal("Error pinging database:", err)
 		}
 	})
-
 }
 
 // Query function : wil return output in the form of booking structure
