@@ -9,15 +9,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// connection parameters for postgres
-/*const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "Saranya@426"
-	dbname   = "postgres"
-)*/
-
 type DBConfig struct {
 	Host     string `json:"host"`
 	Port     int    `json:"port"`
