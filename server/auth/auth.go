@@ -56,5 +56,4 @@ func GET_Connection(c *gin.Context, config connection.DBConfig) {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "Internal server error"})
 	}
 	c.IndentedJSON(http.StatusOK, input)
-
 }

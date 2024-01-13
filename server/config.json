@@ -1,5 +1,3 @@
-
-
 {
     "authorization": {
       "authorizedUsername": "admin",
@@ -9,7 +7,7 @@
       "host": "localhost",
       "port": 5432,
       "user": "postgres",
-      "password": "Saranya@426",
+      "password": "admin@123",
       "dbname": "postgres"
     }
   }
